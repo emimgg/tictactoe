@@ -2,8 +2,8 @@ const container = document.querySelector(".container");
 
 const game = GameController();
 const currentBoard = game.currentGame;
-game.markCell(1, 1);
-game.markCell(1, 2);
+// game.markCell(1, 1);
+// game.markCell(1, 2);
 
 function makeGameboard() {
     const rows = 3;
@@ -41,8 +41,8 @@ function GameController() {
     }
 
     //-----GAME-----
-    const playerOne = createPlayer("Emi", "x");
-    const playerTwo = createPlayer("Alhe", "o");
+    const playerOne = createPlayer("Emi", "X");
+    const playerTwo = createPlayer("Alhe", "O");
 
 
 
@@ -60,7 +60,6 @@ function GameController() {
             } else if (checkDraw(currentGame) === true) {
                     console.log(`Its a draw!`)
                 }
-            switchPlayerTurn()
         } else {
             console.log("Select a valid cell")
         }
@@ -103,6 +102,7 @@ function GameController() {
     }
 
     function renderCells(board, container) {
+        let squares = [];
         let i = 1;
         board.forEach(row => {
             row.forEach(cell => {
@@ -110,23 +110,29 @@ function GameController() {
                 square.classList.add("square");
                 square.dataset.key = i;
                 container.appendChild(square);
-                updateDisplay(square);
+                squares.push(square);
                 i++;
             });
         });
+        return squares;
     };
 
     const cells = renderCells(currentGame, container);
 
-    function updateDisplay(cell) {
-        cell.addEventListener("click", (e) =>{
-            const key = e.target.dataset.key;
-            const row = Math.floor((key -1) /3);
-            const column = (key - 1) % 3;
-            game.markCell(row, column)
-        })
+    function updateDisplay(cells) {
+        cells.forEach(cell => {
+            cell.addEventListener("click", (e) =>{
+                const key = e.target.dataset.key;
+                const row = Math.floor((key -1) /3);
+                const column = (key - 1) % 3;
+                markCell(row, column)
+                cell.textContent = getActiveInput();
+                switchPlayerTurn()
+            })
+        });
     }
     
+    updateDisplay(cells);
     return {
         markCell,
         currentGame,
