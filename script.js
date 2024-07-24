@@ -1,7 +1,8 @@
 const container = document.querySelector(".container");
+const body = document.querySelector("body");
 
 const game = GameController();
-const currentBoard = game.currentGame;
+// const currentBoard = game.newBoard;
 // game.markCell(1, 1);
 // game.markCell(1, 2);
 
@@ -17,15 +18,12 @@ function makeGameboard() {
         }
     }
 
-    return {
-        getBoard: () => board
-    }
+    return board;
 }
 
 //-----PLAYERS-----
 function GameController() {
-    const board = makeGameboard();
-    const currentGame = board.getBoard();
+    const newBoard = makeGameboard();
     const players = [];
 
     function createPlayer(name = "Player", input) {
@@ -52,12 +50,14 @@ function GameController() {
 
     function markCell(row, column){
         const playerInput = getActiveInput();
-        if (currentGame[row][column] === "cell") {
-            currentGame[row][column] = playerInput;
-            console.log(currentGame)
-            if (checkWin(currentGame, playerInput) === true) {
-                console.log(`winner ${activePlayer.name}`);
-            } else if (checkDraw(currentGame) === true) {
+        if (newBoard[row][column] === "cell") {
+            newBoard[row][column] = playerInput;
+            console.log(newBoard)
+            if (checkWin(newBoard, playerInput) === true) {
+                endGame(`winner ${activePlayer.name}`)
+                // console.log();
+            } else if (checkDraw(newBoard) === true) {
+                endGame(`Its a draw!`)
                     console.log(`Its a draw!`)
                 }
         } else {
@@ -101,10 +101,10 @@ function GameController() {
         return board.every(row => row.every(cell => cell !== "cell"));
     }
 
-    function renderCells(board, container) {
+    function renderCells(newBoard, container) {
         let squares = [];
         let i = 1;
-        board.forEach(row => {
+        newBoard.forEach(row => {
             row.forEach(cell => {
                 const square = document.createElement("button");
                 square.classList.add("square");
@@ -117,7 +117,7 @@ function GameController() {
         return squares;
     };
 
-    const cells = renderCells(currentGame, container);
+    const cells = renderCells(newBoard, container);
 
     function updateDisplay(cells) {
         cells.forEach(cell => {
@@ -133,15 +133,39 @@ function GameController() {
     }
     
     updateDisplay(cells);
+
+    function endGame(winMsg) {
+        const modal = document.createElement("dialog");
+        container.appendChild(modal);
+        const resetBtn = document.createElement("button");
+        resetBtn.textContent = "Reset game"
+        modal.appendChild(resetBtn);
+        modal.showModal();
+        resetBtn.addEventListener("click", () => {
+            resetBoard();
+        })
+
+    }
+
+
+    
     return {
         markCell,
-        currentGame,
         getActivePlayer,
-        getActiveInput
+        getActiveInput,
+        getBoard : () => newBoard,
+        renderCells,
+        updateDisplay
     }
 }
 
-
+function resetBoard() {
+    const newGame = GameController();
+    const newBoard = makeGameboard();
+    container.innerHTML= "";
+    const newCells = newGame.renderCells(newBoard, container);
+    newGame.updateDisplay(newCells);
+}
 
 
 
