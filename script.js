@@ -54,11 +54,9 @@ function GameController() {
             newBoard[row][column] = playerInput;
             console.log(newBoard)
             if (checkWin(newBoard, playerInput) === true) {
-                endGame(`winner ${activePlayer.name}`)
-                // console.log();
+                endGame(`${activePlayer.name} has won!!!`)
             } else if (checkDraw(newBoard) === true) {
                 endGame(`Its a draw!`)
-                    console.log(`Its a draw!`)
                 }
         } else {
             console.log("Select a valid cell")
@@ -122,23 +120,36 @@ function GameController() {
     function updateDisplay(cells) {
         cells.forEach(cell => {
             cell.addEventListener("click", (e) =>{
+                const playerInput = getActiveInput();
                 const key = e.target.dataset.key;
                 const row = Math.floor((key -1) /3);
                 const column = (key - 1) % 3;
-                markCell(row, column)
-                cell.textContent = getActiveInput();
-                switchPlayerTurn()
+                markCell(row, column);
+                if (cell.textContent === "") {
+                    cell.textContent = playerInput;
+                    switchPlayerTurn()
+                } else {
+                    const msgBox = document.createElement("p");
+                    msgBox.textContent = "Select a valid square!";
+                    body.appendChild(msgBox);
+                }
             })
         });
     }
     
     updateDisplay(cells);
 
-    function endGame(winMsg) {
+    function endGame(msgBox) {
         const modal = document.createElement("dialog");
         container.appendChild(modal);
+
+        const resultMsg = document.createElement("h1");
+        resultMsg.textContent = `${msgBox}`;
+        modal.appendChild(resultMsg);
+
         const resetBtn = document.createElement("button");
         resetBtn.textContent = "Reset game"
+
         modal.appendChild(resetBtn);
         modal.showModal();
         resetBtn.addEventListener("click", () => {
@@ -146,8 +157,6 @@ function GameController() {
         })
 
     }
-
-
     
     return {
         markCell,
