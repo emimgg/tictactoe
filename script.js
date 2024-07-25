@@ -1,5 +1,9 @@
 const container = document.querySelector(".container");
 const body = document.querySelector("body");
+const logBox = document.querySelector(".log");
+
+
+
 
 const game = GameController();
 // const currentBoard = game.newBoard;
@@ -21,32 +25,61 @@ function makeGameboard() {
     return board;
 }
 
+function getPlayers(players) {
+    //maybe put defaults into objects?
+    const newButton = document.querySelector(".new-btn");
+    const formModal = document.querySelector("#player-form-modal");
+    const playerForm = document.querySelector("form");
+    const p1name = document.querySelector("#p1-name");
+    const p2name = document.querySelector("#p2-name");
+    const p1display = document.querySelector("#p1-display");
+    const p2display = document.querySelector("#p2-display");
+
+
+    newButton.addEventListener("click", () => {
+        formModal.showModal();
+    });
+    
+    playerForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const playerOneName = p1name.value;
+        const playerTwoName = p2name.value;
+
+        p1display.textContent = playerOneName;
+        p2display.textContent = playerTwoName;
+        players[0].name = playerOneName;
+        players[1].name = playerTwoName;
+        console.log(players);
+        resetBoard(playerOneName, playerTwoName);
+
+        formModal.close();
+    })
+
+    return players;
+}
+
+
 //-----PLAYERS-----
-function GameController() {
+function GameController(playerOneName = "Player One", playerTwoName = "Player Two") {
     const newBoard = makeGameboard();
-    const players = [];
-
-    function createPlayer(name = "Player", input) {
-        const pushPlayer = () => {
-            players.push({name, input});
-            }
-        pushPlayer();
-        return {
-            name,
-            input,
-            getPlayers : () => players
+    const players = [
+        {name : playerOneName,
+        playerInput : "X"
+        },
+        {name : playerTwoName,
+        playerInput : "O"
         }
-    }
+    ];
 
-    //-----GAME-----
-    const playerOne = createPlayer("Emi", "X");
-    const playerTwo = createPlayer("Alhe", "O");
-
-
+    getPlayers(players);
 
     let activePlayer = players[0];
+    let activeInput = "X";
+
     const getActivePlayer = () => activePlayer;
-    const getActiveInput = () => getActivePlayer().input;
+    const getActiveInput = () => activeInput;
+    console.log(activePlayer.name);
 
     function markCell(row, column){
         const playerInput = getActiveInput();
@@ -65,6 +98,8 @@ function GameController() {
 
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
+        console.log(activePlayer.name);
+        activeInput = activeInput === "X" ? "O" : "X";
     }
 
 
@@ -127,12 +162,9 @@ function GameController() {
                 markCell(row, column);
                 if (cell.textContent === "") {
                     cell.textContent = playerInput;
+                    cell.classList.add(`${playerInput}`)
                     switchPlayerTurn()
-                } else {
-                    const msgBox = document.createElement("p");
-                    msgBox.textContent = "Select a valid square!";
-                    body.appendChild(msgBox);
-                }
+                } 
             })
         });
     }
@@ -141,6 +173,7 @@ function GameController() {
 
     function endGame(msgBox) {
         const modal = document.createElement("dialog");
+        modal.classList.add("result-modal");
         container.appendChild(modal);
 
         const resultMsg = document.createElement("h1");
@@ -148,12 +181,13 @@ function GameController() {
         modal.appendChild(resultMsg);
 
         const resetBtn = document.createElement("button");
+        resetBtn.classList.add("reset-btn");
         resetBtn.textContent = "Reset game"
 
         modal.appendChild(resetBtn);
         modal.showModal();
         resetBtn.addEventListener("click", () => {
-            resetBoard();
+            resetBoard(playerOneName, playerTwoName);
         })
 
     }
@@ -164,12 +198,14 @@ function GameController() {
         getActiveInput,
         getBoard : () => newBoard,
         renderCells,
-        updateDisplay
+        updateDisplay,
+        players
     }
 }
 
-function resetBoard() {
-    const newGame = GameController();
+function resetBoard(players) {
+    const newGame = GameController(players);
+    // players = newGame.players;
     const newBoard = makeGameboard();
     container.innerHTML= "";
     const newCells = newGame.renderCells(newBoard, container);
@@ -179,18 +215,7 @@ function resetBoard() {
 
 
 
-// console.log(currentGame);
 
 
-// console.log(playerOne.name);
-// console.log(playerTwo.name);
-// console.log(playerTwo.getPlayers());
 
-// round.markCell(1, 1);
-// round.markCell(0, 1);
-// round.markCell(2, 1);
-// round.markCell(0, 0);
-// round.markCell(2, 2);
-// round.markCell(1,2);
-// round.markCell(1,0);
-// round.markCell(2,0);
+
