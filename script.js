@@ -6,9 +6,6 @@ const logBox = document.querySelector(".log");
 
 
 const game = GameController();
-// const currentBoard = game.newBoard;
-// game.markCell(1, 1);
-// game.markCell(1, 2);
 
 function makeGameboard() {
     const rows = 3;
@@ -34,9 +31,12 @@ function getPlayers(players) {
     const p2name = document.querySelector("#p2-name");
     const p1display = document.querySelector("#p1-display");
     const p2display = document.querySelector("#p2-display");
+    const p1score = document.querySelector("#p1-score");
+    const p2score = document.querySelector("#p2-score");
 
 
     newButton.addEventListener("click", () => {
+        formModal.classList.add("result-modal")
         formModal.showModal();
     });
     
@@ -48,11 +48,14 @@ function getPlayers(players) {
 
         p1display.textContent = playerOneName;
         p2display.textContent = playerTwoName;
+        p1score.textContent = `${playerOneName}: `;
+        p2score.textContent = `${playerTwoName}: `;
         players[0].name = playerOneName;
         players[1].name = playerTwoName;
         console.log(players);
         resetBoard(playerOneName, playerTwoName);
 
+        formModal.classList.remove("result-modal");
         formModal.close();
     })
 
@@ -83,11 +86,12 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
 
     function markCell(row, column){
         const playerInput = getActiveInput();
+        const activePlayer = getActivePlayer();
         if (newBoard[row][column] === "cell") {
             newBoard[row][column] = playerInput;
             console.log(newBoard)
             if (checkWin(newBoard, playerInput) === true) {
-                endGame(`${activePlayer.name} has won!!!`)
+                endGame(`${activePlayer.name} won!`)
             } else if (checkDraw(newBoard) === true) {
                 endGame(`Its a draw!`)
                 }
@@ -178,11 +182,13 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
 
         const resultMsg = document.createElement("h1");
         resultMsg.textContent = `${msgBox}`;
+        resultMsg.style.color = "white";
+        resultMsg.style.fontSize = "clamp(1.7rem, 5vw, 5rem)"
         modal.appendChild(resultMsg);
 
         const resetBtn = document.createElement("button");
         resetBtn.classList.add("reset-btn");
-        resetBtn.textContent = "Reset game"
+        resetBtn.textContent = "New round"
 
         modal.appendChild(resetBtn);
         modal.showModal();
@@ -203,8 +209,8 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     }
 }
 
-function resetBoard(players) {
-    const newGame = GameController(players);
+function resetBoard(playerOneName, playerTwoName) {
+    const newGame = GameController(playerOneName, playerTwoName);
     // players = newGame.players;
     const newBoard = makeGameboard();
     container.innerHTML= "";
