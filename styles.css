@@ -1,0 +1,198 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+    grid-template-areas: 
+    "title main"
+    "log main"
+    ". turn";
+
+    justify-content: center;
+    padding: 50px;
+    overflow: hidden;
+}
+
+.title {
+    margin: 16px;
+    font-size: 4em;
+    grid-area: title;
+}
+
+.log {
+    grid-area: log;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.container {
+    width: 450px;
+    height: 450px;
+    border: none;
+    display: grid;
+    gap: 2px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(3, minmax(150px, 1fr));
+    background-color: rgb(177, 177, 177);
+    grid-area: main;
+}
+
+.turn {
+    grid-area: turn;
+    place-self: center;
+    font-size: 22px;
+}
+
+.square {
+    border: none;
+    font-size: 12rem;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.X {
+    color: lightcoral;
+}
+
+.O {
+    color: lightblue;
+}
+
+.players {
+    display: flex;
+    justify-content: center;
+    font-size: 2em;
+    /* font-weight: bold; */
+    gap: 12px;
+}
+
+#X {
+    color: rgb(248, 47, 47);
+}
+
+#O {
+    color: rgb(47, 47, 248);
+}
+
+.new-btn, .reset-btn, #submit {
+    width: 150px;
+    height: 50px;
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.new-btn, .reset-btn {
+    background-color: rgb(88, 168, 243);
+}
+
+#submit {
+    background-color: rgb(201, 185, 40);
+    justify-self: center;
+}
+
+.result-modal{
+    width: 70%;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;  
+    gap: 12px;
+    margin: auto;
+    padding: 20px;
+    background-color: rgb(0, 0, 0, 0.8);
+    border: none;
+    border-radius: 30px;
+    color: white;
+}
+
+form {
+    display: grid;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    width: 70%;
+
+}
+
+.p1, .p2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px
+}
+
+input {
+    padding: 10px;
+    width: clamp(100%, 400px, 8em);
+    font-size: clamp(1rem, 2vw, 5rem);
+    border: none;
+    border-radius: 25px;
+}
+
+.score {
+    padding: 12px;
+    font-size: 1.5em;
+}
+
+.result-modal::backdrop {
+    background-color: black;
+    opacity: 0.6;
+}
+
+
+
+
+@media (max-width: 768px) {
+    body {
+        grid-template-areas: 
+        "title"
+        "main"
+        "turn"
+        "log";
+
+        grid-template-rows: min-content max-content min-content;
+        gap: 20px;
+    }
+
+    .title {
+        margin: 8px;
+        font-size: 3em;
+        grid-area: title;
+    }
+
+    .container {
+        width: 300px;
+        height: 300px;
+        border: none;
+        display: grid;
+        gap: 2px;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: repeat(3, minmax(100px, 1fr));
+        background-color: rgb(177, 177, 177);
+        grid-area: main;
+    }
+
+    .square {
+        border: none;
+        font-size: 8rem;
+        font-weight: bolder;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+    }
+    
+}
+

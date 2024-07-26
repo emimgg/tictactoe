@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <div class="title-container">
+        <h1 class="title">Tic Tac Toe!</h1>
+    </div>
+    <div class="container">
+
+    </div>
+    <p class="turn"></p>
+    <div class="log">
+        <div class="players">
+            <div class="player-card">
+                <h3 id="p1-display">P1</h3>
+                <h3 class="input" id="X">X</h3>
+            </div>
+            <h3>vs</h3>
+            <div class="player-card">
+                <h3 id="p2-display">P2</h3>
+                <h3 class="input" id="O">O</h3>
+            </div>
+        </div>
+        <div class="scoreboard">
+            <h3><u>Score</u></h3>
+            <table>
+                <tr>
+                    <td><h3 class="score" id="p1-score">Player one:</h3></td>
+                    <td><h3 class="score" id="p1-points">0</h3></td>
+                </tr>
+                <tr>
+                    <td><h3 class="score" id="p2-score">Player two:</h3></td>
+                    <td><h3 class="score" id="p2-points">0</h3></td>
+                </tr>
+            </table>
+        </div>
+        <div class="new-game">
+            <button class="new-btn">New game</button>
+            <dialog id="player-form-modal">
+                <form action="" method="post">
+                    <div class="p1">
+                        <label for="p1-name">Player one name</label>
+                        <input type="text" id="p1-name" name="p1-name" placeholder="Player 1" required>
+                    </div>
+                    <div class="p2">
+                        <label for="p2-name">Player two name</label>
+                        <input type="text" id="p2-name" name="p2-name" placeholder="Player 2" required>
+                    </div>
+                    <button type="submit" id="submit">Submit</button>
+                </form>
+            </dialog>
+        </div>
+    </div>
+</body>
+</html>

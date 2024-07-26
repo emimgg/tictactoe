@@ -1,9 +1,4 @@
 const container = document.querySelector(".container");
-const body = document.querySelector("body");
-const logBox = document.querySelector(".log");
-
-
-
 
 const game = GameController();
 
@@ -33,7 +28,9 @@ function getPlayers(players) {
     const p2display = document.querySelector("#p2-display");
     const p1score = document.querySelector("#p1-score");
     const p2score = document.querySelector("#p2-score");
-
+    const p1points = document.querySelector("#p1-points");
+    const p2points = document.querySelector("#p2-points");        
+    const turnText = document.querySelector(".turn");
 
     newButton.addEventListener("click", () => {
         formModal.classList.add("result-modal")
@@ -45,13 +42,18 @@ function getPlayers(players) {
 
         const playerOneName = p1name.value;
         const playerTwoName = p2name.value;
+        p1points.textContent = 0;
+        p2points.textContent = 0;
 
         p1display.textContent = playerOneName;
         p2display.textContent = playerTwoName;
         p1score.textContent = `${playerOneName}: `;
         p2score.textContent = `${playerTwoName}: `;
+        turnText.textContent = `${playerOneName}'s turn...`
+
         players[0].name = playerOneName;
         players[1].name = playerTwoName;
+
         console.log(players);
         resetBoard(playerOneName, playerTwoName);
 
@@ -64,14 +66,18 @@ function getPlayers(players) {
 
 
 //-----PLAYERS-----
-function GameController(playerOneName = "Player One", playerTwoName = "Player Two") {
-    const newBoard = makeGameboard();
+function GameController(
+    playerOneName = "Player One", 
+    playerTwoName = "Player Two") {
+    let newBoard = makeGameboard();
     const players = [
         {name : playerOneName,
-        playerInput : "X"
+        playerInput : "X",
+        score : 0
         },
         {name : playerTwoName,
-        playerInput : "O"
+        playerInput : "O",
+        score : 0
         }
     ];
 
@@ -85,12 +91,15 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     console.log(activePlayer.name);
 
     function markCell(row, column){
+
         const playerInput = getActiveInput();
         const activePlayer = getActivePlayer();
         if (newBoard[row][column] === "cell") {
             newBoard[row][column] = playerInput;
             console.log(newBoard)
             if (checkWin(newBoard, playerInput) === true) {
+                activePlayer.score++;
+                updateScore(players);
                 endGame(`${activePlayer.name} won!`)
             } else if (checkDraw(newBoard) === true) {
                 endGame(`Its a draw!`)
@@ -100,9 +109,19 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
         }
     }
 
+    function updateScore(players) {
+        const p1points = document.querySelector("#p1-points");
+        const p2points = document.querySelector("#p2-points");
+
+        p1points.textContent = players[0].score;
+        p2points.textContent = players[1].score;
+    }
+
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
-        console.log(activePlayer.name);
+        const turnText = document.querySelector(".turn");
+        
+        turnText.textContent = `${activePlayer.name}'s turn...`
         activeInput = activeInput === "X" ? "O" : "X";
     }
 
@@ -157,6 +176,7 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
     const cells = renderCells(newBoard, container);
 
     function updateDisplay(cells) {
+
         cells.forEach(cell => {
             cell.addEventListener("click", (e) =>{
                 const playerInput = getActiveInput();
@@ -189,12 +209,18 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
         const resetBtn = document.createElement("button");
         resetBtn.classList.add("reset-btn");
         resetBtn.textContent = "New round"
-
         modal.appendChild(resetBtn);
         modal.showModal();
         resetBtn.addEventListener("click", () => {
-            resetBoard(playerOneName, playerTwoName);
+            newRound();
         })
+
+        function newRound() {
+            newBoard = makeGameboard();
+            container.innerHTML= "";
+            const newCells = renderCells(newBoard, container);
+            updateDisplay(newCells);
+        }
 
     }
     
@@ -205,13 +231,14 @@ function GameController(playerOneName = "Player One", playerTwoName = "Player Tw
         getBoard : () => newBoard,
         renderCells,
         updateDisplay,
-        players
+        players,
+        updateScore
     }
 }
 
+
 function resetBoard(playerOneName, playerTwoName) {
     const newGame = GameController(playerOneName, playerTwoName);
-    // players = newGame.players;
     const newBoard = makeGameboard();
     container.innerHTML= "";
     const newCells = newGame.renderCells(newBoard, container);
