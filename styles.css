@@ -51,12 +51,13 @@ body {
 
 .square {
     border: none;
-    font-size: 12rem;
+    font-size: 10em;
     font-weight: bolder;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: white;
+    padding-bottom: 22px;
 }
 
 .X {
